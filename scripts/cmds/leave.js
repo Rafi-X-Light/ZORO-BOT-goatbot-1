@@ -25,6 +25,6 @@ module.exports = {
  } else {
  id = parseInt(args.join(" "));
  }
- return api.sendMessage('goodbye gays', id, () => api.removeUserFromGroup(api.getCurrentUserID(), id))
+ return api.sendMessage('𝙈𝙮 𝙇𝙤𝙧𝙙, Im Leaving In This Group, Thankyou For Using Me! 😙', id, () => api.removeUserFromGroup(api.getCurrentUserID(), id))
     }
   };

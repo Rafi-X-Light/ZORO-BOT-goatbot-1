@@ -19,7 +19,7 @@ module.exports = {
   onStart: async function ({ message, event, args }) {
     const mention = Object.keys(event.mentions);
     if (mention.length == 0) {
-      message.reply("mention han aauta lai");
+      message.reply("mention someone");
       return;
     }
 

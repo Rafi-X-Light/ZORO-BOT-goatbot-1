@@ -5,6 +5,7 @@ const fs = require('fs');
 module.exports = {
   config: {
     name: "myquote",
+    aliases: ["mq"],
     version: "1.0",
     author: "Samir Œ",//img modifed by kshitiz
     countDown: 5,
