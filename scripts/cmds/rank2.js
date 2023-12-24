@@ -2,11 +2,11 @@ const Canvas = require("canvas");
 const { uploadZippyshare } = global.utils;
 
 const defaultFontName = "BeVietnamPro-SemiBold";
-const defaultPathFontName = `${__dirname}/assets/font/BeVietnamPro-SemiBold.ttf`;
+const defaultPathFontName = `${__dirname}/assets/font/Kanit-SemiBoldItalic.ttf`;
 const { randomString } = global.utils;
 const percentage = total => total / 100;
 
-Canvas.registerFont(`${__dirname}/assets/font/BeVietnamPro-Bold.ttf`, {
+Canvas.registerFont(`${__dirname}/assets/font/Kanit-SemiBoldItalic.ttf`, {
 	family: "BeVietnamPro-Bold"
 });
 Canvas.registerFont(defaultPathFontName, {
@@ -20,7 +20,7 @@ global.client.makeRankCard = makeRankCard;
 
 module.exports = {
 	config: {
-		name: "rank2",
+		name: "rank",
 		version: "1.6",
 		author: "NTKhang",
 		countDown: 5,
@@ -59,7 +59,7 @@ module.exports = {
 			return rankCard;
 		}));
 
-		return message.reply({
+		return message.send({
 			attachment: rankCards
 		});
 	},
@@ -80,12 +80,14 @@ module.exports = {
 const defaultDesignCard = {
 	widthCard: 2000,
 	heightCard: 500,
-	main_color: "#474747",
+	main_color: "http://tinyurl.com/ysedpgr6",
 	sub_color: "rgba(255, 255, 255, 0.5)",
-	alpha_subcard: 0.9,
-	exp_color: "#e1e1e1",
-	expNextLevel_color: "#3f3f3f",
-	text_color: "#000000"
+	alpha_subcard: 0.6,
+
+	line_color: "#00BFFF",
+	exp_color: "#F7F7F7",
+	expNextLevel_color: "#808080",
+	text_color: "#3498db"
 };
 
 async function makeRankCard(userID, usersData, threadsData, threadID, deltaNext, api = global.GoatBot.fcaApi) {

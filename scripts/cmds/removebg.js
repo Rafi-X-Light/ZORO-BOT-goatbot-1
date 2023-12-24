@@ -1,81 +1,65 @@
 const axios = require('axios');
-const FormData = require('form-data');
 const fs = require('fs-extra');
-const path = require('path');
-const { image } = require('image-downloader');
 
 module.exports = {
-  config: {
-    name: 'removebg',
-    version: '2.0',
-    author: 'kshitiz',
-    countDown: 8,
-    role: 0,
-    category: 'fun',
-    shortDescription: {
-      en: 'remove bg of pic'
+    config: {
+      name: "rbg",
+      aliases: [],
+      author: "Hazeyy/kira", // hindi ito collab, ako kasi nag convert :>
+      version: "69",
+      cooldowns: 5,
+      role: 0,
+      shortDescription: {
+        en: "Remove background in your photo"
+      },
+      longDescription: {
+        en: "Remove background in your photo"
+      },
+      category: "img",
+      guide: {
+        en: "{p}{n} [reply to an img]"
+      }
     },
-    longDescription: {
-      en: 'remove background of a picture'
-    },
-    guide: {
-      en: '{pn} removebg on reply of img'
+
+onStart: async function({ api, event }) {
+  const args = event.body.split(/\s+/);
+  args.shift();
+
+  try {
+    const response = await axios.get("https://hazeyy-apis-combine.kyrinwu.repl.co");
+    if (response.data.hasOwnProperty("error")) {
+      return api.sendMessage(response.data.error, event.threadID, event.messageID);
     }
-  },
-  onStart: async function ({ api, event, args }) {
-    try {
-      if (event.type !== "message_reply") {
-        return api.sendMessage("🖼️ | You must reply to the photo you want to remove the background from.", event.threadID, event.messageID);
-      }
-      api.sendMessage("🖼️ | Removing the background from the provided picture. Please wait...", event.threadID, event.messageID);
 
-      if (!event.messageReply.attachments || event.messageReply.attachments.length === 0) {
-        return api.sendMessage("✅ | Background has been successfully removed.", event.threadID, event.messageID);
-      }
+    let pathie = __dirname + `/cache/removed_bg.jpg`;
+    const { threadID, messageID } = event;
 
-      if (event.messageReply.attachments[0].type !== "photo") {
-        return api.sendMessage("❌ | This media is not available", event.threadID, event.messageID);
-      }
+    let photoUrl = event.messageReply ? event.messageReply.attachments[0].url : args.join(" ");
 
-      const content = event.messageReply.attachments[0].url;
-      const MtxApi = ["ToQX2FRYSXjWGSvmL5vNCzvT"]; 
-      const inputPath = path.resolve(__dirname, 'cache', `photo.png`);
-
-      await image({
-        url: content,
-        dest: inputPath
-      });
-
-      const formData = new FormData();
-      formData.append('size', 'auto');
-      formData.append('image_file', fs.createReadStream(inputPath), path.basename(inputPath));
-
-      axios({
-        method: 'post',
-        url: 'https://api.remove.bg/v1.0/removebg',
-        data: formData,
-        responseType: 'arraybuffer',
-        headers: {
-          ...formData.getHeaders(),
-          'X-Api-Key': MtxApi[Math.floor(Math.random() * MtxApi.length)],
-        },
-        encoding: null
-      })
-        .then((response) => {
-          if (response.status !== 200) {
-            console.error('Error:', response.status, response.statusText);
-            return;
-          }
-
-          fs.writeFileSync(inputPath, response.data);
-          api.sendMessage({ attachment: fs.createReadStream(inputPath) }, event.threadID, () => fs.unlinkSync(inputPath));
-        })
-        .catch((error) => {
-          console.error('Failed Removedbg command API', error);
-        });
-    } catch (e) {
-      console.error(e);
-      return api.sendMessage(`Error in the Removed Background command`, event.threadID, event.messageID);
+    if (!photoUrl) {
+      api.sendMessage("📸 𝖯𝗅𝖾𝖺𝗌𝖾 𝗋𝖾𝗉𝗅𝗎 𝗍𝗈 𝖺 𝗉𝗁𝗈𝗍𝗈 𝗍𝗈 𝗉𝗋𝗈𝖼𝖾𝗌𝗌 𝖺𝗇𝖽 𝗋𝖾𝗆𝗈𝗏𝖾 𝖻𝖺𝖼𝗄𝗀𝗋𝗈𝗎𝗇𝖽𝗌.", threadID, messageID);
+      return;
     }
-  }
+
+    api.sendMessage("🕟 | 𝖱𝖾𝗆𝗈𝗏𝗂𝗇𝗀 𝖡𝖺𝖼𝗄𝗀𝗋𝗈𝗎𝗇𝖽, 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍...", threadID, async () => {
+      try {
+        const response = await axios.get(`https://hazeyy-apis-combine.kyrinwu.repl.co/api/try/removebg?url=${encodeURIComponent(photoUrl)}`);
+        const processedImageURL = response.data.image_data;
+
+        const img = (await axios.get(processedImageURL, { responseType: "arraybuffer" })).data;
+
+        fs.writeFileSync(pathie, Buffer.from(img, 'binary'));
+
+        api.sendMessage({
+          body: "✨ 𝖧𝖾𝗋𝖾'𝗌 𝗒𝗈𝗎𝗋 𝗂𝗆𝖺𝗀𝖾 𝗐𝗂𝗍𝗁𝗈𝗎𝗍 𝖻𝺰𝖺𝖼𝗄𝗀𝗋𝗈𝗎𝗇𝖺𝖺𝖴",
+          attachment: fs.createReadStream(pathie)
+        }, threadID, () => fs.unlinkSync(pathie), messageID);
+      } catch (error) {
+        api.sendMessage(`🔴 𝖤𝗋𝗋𝗈𝗋 𝗉𝗋𝗈𝖢𝖾𝗌𝗌𝖨𝗂𝗆𝖺𝖺𝖴: ${error}`, threadID, messageID);
+      }
+    });
+  } catch (error) {
+    api.sendMessage(`𝖤𝗋𝗋𝗈𝗋: ${error.message}`, event.threadID, event.messageID);
+   }
+ }
 };
