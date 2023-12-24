@@ -1,6 +1,20 @@
-/** 
+/**
  * @author NTKhang
- * ! The source code is written by NTKhang, please don't change the author's name everywhere. Thank you for using 
+ * ! The source code is written by NTKhang, please don't change the author's name everywhere. Thank you for using
+ * ! Official source code: https://github.com/ntkhang03/Goat-Bot-V2
+ * ! If you do not download the source code from the above address, you are using an unknown version and at risk of having your account hacked
+ *
+ * English:
+ * ! Please do not change the below code, it is very important for the project.
+ * It is my motivation to maintain and develop the project for free.
+ * ! If you change it, you will be banned forever
+ * Thank you for using
+ *
+ * Vietnamese:
+ * ! Vui lòng không thay đổi mã bên dưới, nó rất quan trọng đối với dự án.
+ * Nó là động lực để tôi duy trì và phát triển dự án miễn phí.
+ * ! Nếu thay đổi nó, bạn sẽ bị cấm vĩnh viễn
+ * Cảm ơn bạn đã sử dụng
  */
 
 process.on('unhandledRejection', error => console.log(error));
@@ -33,11 +47,9 @@ function validJSON(pathDir) {
 }
 
 const { NODE_ENV } = process.env;
-// const dirConfig = `${__dirname}/config${['production', 'development'].includes(NODE_ENV) ? '.dev.json' : '.json'}`;
 const dirConfig = path.normalize(`${__dirname}/config${['production', 'development'].includes(NODE_ENV) ? '.dev.json' : '.json'}`);
-// const dirConfigCommands = `${__dirname}/configCommands${['production', 'development'].includes(NODE_ENV) ? '.dev.json' : '.json'}`;
 const dirConfigCommands = path.normalize(`${__dirname}/configCommands${['production', 'development'].includes(NODE_ENV) ? '.dev.json' : '.json'}`);
-const dirAccount = `${__dirname}/account${['production', 'development'].includes(NODE_ENV) ? '.dev.txt' : '.txt'}`;
+const dirAccount = path.normalize(`${__dirname}/account${['production', 'development'].includes(NODE_ENV) ? '.dev.txt' : '.txt'}`);
 
 for (const pathDir of [dirConfig, dirConfigCommands]) {
 	try {
@@ -209,10 +221,10 @@ function convertLangObj(languageData) {
 function getText(head, key, ...args) {
 	let langObj;
 	if (typeof head == "object") {
-		let pathLanguageFile = `${__dirname}/languages/${head.lang}.lang`;
+		let pathLanguageFile = path.normalize(`${__dirname}/languages/${head.lang}.lang`);
 		head = head.head;
 		if (!fs.existsSync(pathLanguageFile)) {
-			utils.log.warn("LANGUAGE", `Can't find language file ${pathLanguageFile}, using default language file "${__dirname}/languages/en.lang"`);
+			utils.log.warn("LANGUAGE", `Can't find language file ${pathLanguageFile}, using default language file "${path.normalize(`${__dirname}/languages/en.lang`)}"`);
 			pathLanguageFile = `${__dirname}/languages/en.lang`;
 		}
 		const readLanguage = fs.readFileSync(pathLanguageFile, "utf-8");
@@ -256,7 +268,7 @@ if (config.autoRestart) {
 (async () => {
 	// ———————————————— SETUP MAIL ———————————————— //
 	const { gmailAccount } = config.credentials;
-	const { email, clientId, clientSecret, refreshToken, apiKey: googleApiKey } = gmailAccount;
+	const { email, clientId, clientSecret, refreshToken } = gmailAccount;
 	const OAuth2 = google.auth.OAuth2;
 	const OAuth2_client = new OAuth2(clientId, clientSecret);
 	OAuth2_client.setCredentials({ refresh_token: refreshToken });
@@ -325,9 +337,9 @@ function compareVersion(version1, version2) {
 	const v2 = version2.split(".");
 	for (let i = 0; i < 3; i++) {
 		if (parseInt(v1[i]) > parseInt(v2[i]))
-			return 1;
+			return 1; // version1 > version2
 		if (parseInt(v1[i]) < parseInt(v2[i]))
-			return -1;
+			return -1; // version1 < version2
 	}
-	return 0;
+	return 0; // version1 = version2
 }
