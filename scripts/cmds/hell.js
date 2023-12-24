@@ -1,11 +1,10 @@
-
- const fs = require("fs")
+const fs = require("fs")
 const jimp = require("jimp")
 module.exports = {
 	config: {
 		name: "hell",
 		version: "1.1",
-		author: "Sandy",
+		author: "NIB",
 		countDown: 5,
 		role: 0,
 		shortDescription: {
@@ -16,7 +15,7 @@ module.exports = {
 			vi: "",
 			en: ""
 		},
-		category: "fun",
+		category: "normal",
 		guide: "",
 		
 	},
@@ -33,9 +32,9 @@ url = event.messageReply.attachments[0].url
 
   url = await usersData.getAvatarUrl(uid);
 }
-let img = await jimp.read("https://preview.redd.it/bulmm46zcfy91.png?auto=webp&s=")
+let img = await jimp.read("https://preview.redd.it/bulmm46zcfy91.png?auto=webp&s=8032342154184d32912f8077393de67a2f6bd421")
 let imgg = await jimp.read(url)
-8032342154184d32912f8077393de67a2f6bd421
+
 img.composite(imgg.resize(360, 370), 40, 260).composite(imgg.resize(360, 370), 40, 980)
 
 await img.writeAsync(__dirname + "/tmp/hell.png")

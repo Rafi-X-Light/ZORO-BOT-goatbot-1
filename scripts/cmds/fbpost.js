@@ -3,7 +3,7 @@ const axios = require("axios");
 
 module.exports = {
   config: {
-    name: "postfb",
+    name: "fbpost",
     version: "1.0",
     author: "jfhigtfdv",
     countDown: 5,

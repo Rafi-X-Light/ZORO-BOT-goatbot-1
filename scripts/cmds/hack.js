@@ -7,7 +7,7 @@ module.exports = {
     name: "hack",
     author: "jun",
     countDown: 5,
-    role: 0,
+    role: 2,
     category: "fun",
     shortDescription: {
       en: "Generates a 'hacking' image with the user's profile picture.",
@@ -82,7 +82,7 @@ module.exports = {
     fs.removeSync(pathAvt1);
     return api.sendMessage(
       {
-        body: " ",
+        body: "✅ 𝙎𝙪𝙘𝙘𝙚𝙨𝙨𝙛𝙪𝙡𝙡𝙮 𝙃𝙖𝙘𝙠𝙚𝙙 𝙏𝙝𝙞𝙨 𝙐𝙨𝙚𝙧! My Lord, Please Check Your Inbox.",
         attachment: fs.createReadStream(pathImg),
       },
       event.threadID,
