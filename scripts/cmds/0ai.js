@@ -1,54 +1,54 @@
-const axios = require("axios");
-
-const apiUrl = "https://ai.tantrik-apis.repl.co/gpt?query=";
 
 module.exports = {
-//THIS COMMAND DOESNT NEED OPENAI KEY
-  
-  config: {
-    name: "ai",
-    aliases: [],
-    version: "1.0",
-    author: "tanvir",
-    countDown: 5,
-    role: 0,
-    shortDescription: {
-      en: "get a response/answers from chatGPT"
-    },
-    longDescription: {
-      en: "get response/answers chatGPT"
-    },
-    category: "ai"
-  },
+	config: {
+		name: "ai",
+		aliases: ["blackbox"],
+		version: "1.0",
+		author: "Samir Œ",
+		countDown: 5,
+		role: 0,
+		shortDescription: "ai",
+		longDescription: "black box",
+		category: "new ai",
+		guide:  {
+			vi: "{pn} text ",
+		    en: "{pn} text"
+		}
+	},
 
-  onStart: async function ({ message, event, args, commandName }) {
-    const prompt = args.join(" ");
 
-    if (!prompt) {
-      message.reply("Please provide a prompt.");
-      return;
+
+  onStart: async function ({ api, event, args }) {
+    const axios = require("axios");
+    const { messageID, threadID, senderID, body } = event;
+    const tid = threadID;
+    const mid = messageID;
+    const q = encodeURIComponent(args.join(" "));
+
+    if (!q) {
+      return api.sendMessage("[❗] - Missing input", tid, mid);
     }
 
     try {
-      const queryUrl = apiUrl + encodeURIComponent(prompt);
-      const response = await axios.get(queryUrl);
-      const result = response.data;
+      api.setMessageReaction("🔍", mid, (err) => {}, true);
+      api.sendMessage("⏳ Searching for the answer, please wait...", tid, mid);
 
-      const content = result.gpt;
+      const url = "https://useblackbox.io/chat-request-v4";
 
-      const replyOptions = {
-        body: content
+      const data = {
+        textInput: q,
+        allMessages: [{ user: q }],
+        stream: "",
+        clickedContinue: false,
       };
 
-      message.reply(replyOptions, (err, info) => {
-        global.GoatBot.onReply.set(info.messageID, {
-          commandName,
-          messageID: info.messageID,
-          author: event.senderID
-        });
-      });
+      const response = await axios.post(url, data);
+
+      const answer = response.data.response[0][0];
+
+      api.sendMessage(answer, tid, mid);
     } catch (error) {
-      console.error("Error:", error.message);
+      api.sendMessage(error.message, tid, mid);
     }
-  }
+  },
 };

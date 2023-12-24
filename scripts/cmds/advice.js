@@ -25,7 +25,7 @@ module.exports = {
 
       let translatedAdvice = await translateAdvice(advice);
 
-      let messageToSend = `: ${translatedAdvice}`;
+      let messageToSend = `𝙎𝙤𝙥𝙝𝙞𝙖 𝘼𝙄:  ${translatedAdvice}`;
 
       return api.sendMessage(messageToSend, event.threadID, event.messageID);
     } catch (error) {
